@@ -12,6 +12,6 @@ setup(
         'validation==0.1.0'
     ],
     dependency_links=[
-        'http://github.com/bmorgan21/python-validation/tarball/master#egg=validation-0.1.0'
+        'https://github.com/bmorgan21/python-validation/tarball/master#egg=validation-0.1.0'
     ]
 )
