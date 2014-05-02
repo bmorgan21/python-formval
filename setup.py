@@ -12,6 +12,6 @@ setup(
         'validation==0.1.0'
     ],
     dependency_links=[
-        'git+https://github.com/bmorgan21/python-validation'
+        'git+https://github.com/bmorgan21/python-validation#egg=validation-0.1.0'
     ]
 )
