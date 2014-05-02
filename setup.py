@@ -9,9 +9,9 @@ setup(
     url='https://github.com/bmorgan21/python-formval',
     description='Form validation library for Python.',
     install_requires=[
-        'validation==0.1.0'
+        'validation'
     ],
     dependency_links=[
-        'git+https://github.com/bmorgan21/python-validation#egg=validation-0.1.0'
+        'git+https://github.com/bmorgan21/python-validation'
     ]
 )
