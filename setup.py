@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-    name='Formval',
+    name='formval',
     version='0.1.0',
     author='Brian S Morgan',
     author_email='brian.s.morgan@gmail.com',
@@ -9,9 +9,6 @@ setup(
     url='https://github.com/bmorgan21/python-formval',
     description='Form validation library for Python.',
     install_requires=[
-        'validation==0.1.0'
-    ],
-    dependency_links=[
-        'https://github.com/bmorgan21/python-validation/tarball/master#egg=validation-0.1.0'
+        'validation>=0.1.0'
     ]
 )
