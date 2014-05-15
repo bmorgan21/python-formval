@@ -1,8 +1,8 @@
-from webob.multidict import MultiDict
+from werkzeug.datastructures import MultiDict
 
 from . import conditions
 from . import types
-from . import validation as vv
+from . import validators as vv
 
 class FormValResult(object):
     def __init__(self, handled, strings, values=None, errors=None):
