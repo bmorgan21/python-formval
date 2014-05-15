@@ -88,7 +88,7 @@ class FormVal(object):
                         items[k] = values.get(k)
                 else:
                     list_value = values.getlist(k)
-                    if len(tmp) > 1:
+                    if len(list_value) > 1:
                         items[k] = list_value
                     else:
                         items[k] = values.get(k)
