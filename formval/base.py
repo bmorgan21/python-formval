@@ -76,8 +76,22 @@ class FormVal(object):
     def _process_strings(self, values):
         errors = MultiDict()
         results = MultiDict()
+
+        items = {}
         if isinstance(values, MultiDict):
-            items = values.mixed().items()
+            for k in values.keys():
+                if k in self._fields:
+                    field = self._fields[k]
+                    if field.is_list:
+                        items[k] = values.getlist(k)
+                    else:
+                        items[k] = values.get(k)
+                else:
+                    list_value = values.getlist(k)
+                    if len(tmp) > 1:
+                        items[k] = list_value
+                    else:
+                        items[k] = values.get(k)
         else:
             items = values.items()
 
