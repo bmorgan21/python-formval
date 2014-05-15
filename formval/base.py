@@ -10,6 +10,7 @@ class FormValResult(object):
         self.strings = strings
         self.values = values
         self.errors = errors
+        self.errors_as_string = {k:str(v) for k,v in errors.items()}
 
     def success(self):
         return self.handled and not self.errors
