@@ -34,6 +34,27 @@ class FormValMeta(type):
 
         return type.__new__(cls, name, bases, dct)
 
+def to_mixed(values):
+    result = {}
+    if isinstance(values, MultiDict):
+        for k in values.keys():
+            if k in self._fields:
+                field = self._fields[k]
+                if field.is_list:
+                    result[k] = values.getlist(k)
+                else:
+                    result[k] = values.get(k)
+            else:
+                list_value = values.getlist(k)
+                if len(list_value) > 1:
+                    result[k] = list_value
+                else:
+                    result[k] = values.get(k)
+    else:
+        result = values
+
+    return result
+
 class FormVal(object):
     __metaclass__ = FormValMeta
 
@@ -49,7 +70,7 @@ class FormVal(object):
             if k in self._fields:
                 results.add(k, self._fields[k].python_to_string(v))
 
-        return results
+        return to_mixed(results)
 
     def process_strings(self, strings):
         """Turn input strings into python values"""
@@ -72,28 +93,11 @@ class FormVal(object):
 
     def _to_strings(self, values):
         return values
-
     def _process_strings(self, values):
         errors = MultiDict()
         results = MultiDict()
 
-        items = []
-        if isinstance(values, MultiDict):
-            for k in values.keys():
-                if k in self._fields:
-                    field = self._fields[k]
-                    if field.is_list:
-                        items.append((k, values.getlist(k)))
-                    else:
-                        items.append((k, values.get(k)))
-                else:
-                    list_value = values.getlist(k)
-                    if len(list_value) > 1:
-                        items.append((k, list_value))
-                    else:
-                        items.append((k, values.get(k)))
-        else:
-            items = values.items()
+        items = to_mixed(values).items()
 
         for k,v in items:
             if k in self._fields:
@@ -114,7 +118,7 @@ class FormVal(object):
                 except AttributeError:
                     pass
 
-        return FormValResult(True, values, values=results, errors=errors)
+        return FormValResult(True, values, values=to_mixed(results), errors=to_mixed(errors))
 
 class ConditionalVal(FormVal):
     def __init__(self, **kwargs):
