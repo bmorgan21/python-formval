@@ -1,2 +1,2 @@
-from base import FormVal, ConditionalVal, KeyConditionalVal
+from base import FormVal, ConditionalVal, KeyConditionalVal, to_mixed
 from . import types
