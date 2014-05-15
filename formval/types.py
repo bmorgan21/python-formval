@@ -1,6 +1,4 @@
-from lepl.apps import rfc3696
-
-from . import validation as vv
+from . import validators as vv
 
 UNDEF=()
 
