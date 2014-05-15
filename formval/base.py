@@ -77,21 +77,21 @@ class FormVal(object):
         errors = MultiDict()
         results = MultiDict()
 
-        items = {}
+        items = []
         if isinstance(values, MultiDict):
             for k in values.keys():
                 if k in self._fields:
                     field = self._fields[k]
                     if field.is_list:
-                        items[k] = values.getlist(k)
+                        items.append((k, values.getlist(k)))
                     else:
-                        items[k] = values.get(k)
+                        items.append((k, values.get(k)))
                 else:
                     list_value = values.getlist(k)
                     if len(list_value) > 1:
-                        items[k] = list_value
+                        items.append((k, list_value))
                     else:
-                        items[k] = values.get(k)
+                        items.append((k, values.get(k)))
         else:
             items = values.items()
 
