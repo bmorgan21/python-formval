@@ -34,12 +34,12 @@ class FormValMeta(type):
 
         return type.__new__(cls, name, bases, dct)
 
-def to_mixed(values):
+def to_mixed(values, fields=None):
     result = {}
     if isinstance(values, MultiDict):
         for k in values.keys():
-            if k in self._fields:
-                field = self._fields[k]
+            if fields and k in fields:
+                field = fields[k]
                 if field.is_list:
                     result[k] = values.getlist(k)
                 else:
