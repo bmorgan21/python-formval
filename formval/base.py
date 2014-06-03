@@ -1,8 +1,8 @@
 from werkzeug.datastructures import MultiDict
 
 from . import conditions
-from . import types
 from . import validators as vv
+
 
 class FormValResult(object):
     def __init__(self, handled, strings, values=None, errors=None):
@@ -10,7 +10,7 @@ class FormValResult(object):
         self.strings = strings
         self.values = values
         self.errors = errors
-        self.errors_as_string = {k:str(v) for k,v in errors.items()} if errors else self.errors
+        self.errors_as_string = {k: str(v) for k, v in errors.items()} if errors else self.errors
 
     def success(self):
         return self.handled and not self.errors
@@ -18,10 +18,11 @@ class FormValResult(object):
     def error(self):
         return self.handled and self.errors
 
+
 class FormValMeta(type):
     def __new__(cls, name, bases, dct):
         _fields = {}
-        for k,v in dct.iteritems():
+        for k, v in dct.iteritems():
             if callable(getattr(v, 'string_to_python', None)) and callable(getattr(v, 'python_to_string', None)):
                 _fields[k] = v
 
@@ -34,6 +35,7 @@ class FormValMeta(type):
         dct.setdefault('ALLOW_UNDEFINED', False)
 
         return type.__new__(cls, name, bases, dct)
+
 
 def to_mixed(values, fields=None):
     result = {}
@@ -55,6 +57,7 @@ def to_mixed(values, fields=None):
         result = values
 
     return result
+
 
 class FormVal(object):
     __metaclass__ = FormValMeta
@@ -94,13 +97,14 @@ class FormVal(object):
 
     def _to_strings(self, values):
         return values
+
     def _process_strings(self, values):
         errors = MultiDict()
         results = MultiDict()
 
         items = to_mixed(values).items()
 
-        for k,v in items:
+        for k, v in items:
             if k in self._fields:
                 try:
                     results.add(k, self._fields[k].string_to_python(k, v))
@@ -110,7 +114,7 @@ class FormVal(object):
             elif self.ALLOW_UNDEFINED:
                 results.add(k, v)
 
-        for k,v in self._fields.iteritems():
+        for k, v in self._fields.iteritems():
             if k not in values:
                 if not v.optional:
                     errors.add(k, vv.ValidationException('Undefined Error', field=k))
@@ -121,16 +125,18 @@ class FormVal(object):
 
         return FormValResult(True, values, values=to_mixed(results), errors=to_mixed(errors))
 
+
 class ConditionalVal(FormVal):
     def __init__(self, **kwargs):
         if not getattr(self, '__condition__', None):
             raise RuntimeError('Must specify __condition__ attribute')
         FormVal.__init__(self, **kwargs)
 
-    def process_strings(self, values):
-        if self.__condition__.should_process(values):
+    def process_strings(self, values, force=False):
+        if force or self.__condition__.should_process(values):
             return FormVal.process_strings(self, values)
-        return FormValResult(False, values);
+        return FormValResult(False, values)
+
 
 class KeyConditionalVal(ConditionalVal):
     def __init__(self, key='_', **kwargs):
