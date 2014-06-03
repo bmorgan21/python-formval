@@ -1,6 +1,10 @@
+import decimal
+
 from . import validators as vv
 
-UNDEF=()
+
+UNDEF = ()
+
 
 class BaseType(object):
     def __init__(self, validator=None, optional=False, empty=True, default=UNDEF, default_when_empty=False, is_list=False):
@@ -51,15 +55,18 @@ class BaseType(object):
         else:
             return self.validator.is_empty(value)
 
+
 class File(BaseType):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('validator', vv.File())
         BaseType.__init__(self, *args, **kwargs)
 
+
 class ImageFile(File):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('validator', vv.ImageFile())
         File.__init__(self, *args, **kwargs)
+
 
 class Unicode(BaseType):
     def __init__(self, min_length=None, max_length=None, *args, **kwargs):
@@ -67,10 +74,24 @@ class Unicode(BaseType):
         kwargs.setdefault('validator', vv.Unicode(min_length=min_length, max_length=max_length))
         BaseType.__init__(self, *args, **kwargs)
 
+
+class Integer(BaseType):
+    def __init__(self, min=None, max=None, *args, **kwargs):
+        kwargs.setdefault('validator', vv.Integer(min=min, max=max))
+        BaseType.__init_(self, *args, **kwargs)
+
+
+class Decimal(BaseType):
+    def __init__(self, min=None, max=None, rounding=decimal.ROUND_HALF_EVEN, scale=2, *args, **kwargs):
+        kwargs.setdefault('validator', vv.Decimal(min=min, max=max, rounding=rounding, scale=scale))
+        BaseType.__init__(self, *args, **kwargs)
+
+
 class Enum(BaseType):
     def __init__(self, choices, *args, **kwargs):
         kwargs.setdefault('validator', vv.Enum(choices))
         BaseType.__init__(self, *args, **kwargs)
+
 
 class Email(Unicode):
     def __init__(self, *args, **kwargs):
