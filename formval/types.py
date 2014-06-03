@@ -78,7 +78,7 @@ class Unicode(BaseType):
 class Integer(BaseType):
     def __init__(self, min=None, max=None, *args, **kwargs):
         kwargs.setdefault('validator', vv.Integer(min=min, max=max))
-        BaseType.__init_(self, *args, **kwargs)
+        BaseType.__init__(self, *args, **kwargs)
 
 
 class Decimal(BaseType):
