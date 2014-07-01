@@ -97,3 +97,9 @@ class Email(Unicode):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('validator', vv.Email(max_length=256))
         Unicode.__init__(self, *args, **kwargs)
+
+
+class Boolean(BaseType):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('validator', vv.Boolean())
+        BaseType.__init__(self, *args, **kwargs)
