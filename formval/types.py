@@ -64,8 +64,8 @@ class File(BaseType):
 
 
 class ImageFile(File):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('validator', vv.ImageFile())
+    def __init__(self, max_size=None, *args, **kwargs):
+        kwargs.setdefault('validator', vv.ImageFile(max_size=max_size))
         File.__init__(self, *args, **kwargs)
 
 

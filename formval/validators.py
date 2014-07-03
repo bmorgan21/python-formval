@@ -5,6 +5,9 @@ from validation import *
 
 
 class File(Validator):
+    def __init__(self, max_size=None):
+        self.max_size = max_size
+
     def is_empty(self, value):
         if isinstance(value, FileStorage):
             empty = value.content_length == 0
@@ -24,6 +27,9 @@ class File(Validator):
                     not hasattr(inp, 'readlines') or \
                     not hasattr(inp, 'seek'):
                 raise ValidationException('Submitted data is not a file')
+        else:
+            if self.max_size is not None and value.content_length > self.max_size:
+                raise ValidationException('File too large')
 
         return Validator._to_python(self, value)
 
