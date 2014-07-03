@@ -24,7 +24,7 @@ class FormValMeta(type):
         _fields = {}
         for k, v in dct.iteritems():
             if callable(getattr(v, 'string_to_python', None)) and callable(getattr(v, 'python_to_string', None)):
-                _fields[k] = v
+                _fields[v.name or k] = v
 
         dct.setdefault('_fields', {})
         for base in bases:
