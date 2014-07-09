@@ -10,7 +10,10 @@ class FormValResult(object):
         self.strings = strings
         self.values = values
         self.errors = errors
-        self.errors_as_string = {k: str(v) for k, v in errors.items()} if errors else self.errors
+
+    @property
+    def errors_as_string(self):
+        return {k: str(v) for k, v in self.errors.items()} if self.errors else self.errors
 
     def success(self):
         return self.handled and not self.errors
