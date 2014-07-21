@@ -19,7 +19,7 @@ class FormValResult(object):
         return self.handled and not self.errors
 
     def error(self):
-        return self.handled and self.errors
+        return self.handled and bool(self.errors)
 
 
 class FormValMeta(type):
