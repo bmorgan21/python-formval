@@ -94,6 +94,11 @@ class Enum(BaseType):
         BaseType.__init__(self, *args, **kwargs)
 
 
+class Type(BaseType):
+    def __init__(self, choices, *args, **kwargs):
+        kwargs.setdefault('validator', vv.Type(choices))
+        BaseType.__init__(self, *args, **kwargs)
+
 class Email(Unicode):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('validator', vv.Email(max_length=256))
