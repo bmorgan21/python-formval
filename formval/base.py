@@ -1,7 +1,10 @@
+import re
 from werkzeug.datastructures import MultiDict
 
 from . import conditions
 from . import validators as vv
+
+key_re = re.compile('^(.*?)\[(.*?)\]$', re.I)
 
 
 class FormValResult(object):
@@ -75,7 +78,11 @@ class FormVal(object):
         results = MultiDict()
         for k, v in values.iteritems():
             if k in self._fields:
-                results.add(k, self._fields[k].python_to_string(v))
+                if self._fields[k].is_dict and isinstance(v, dict):
+                    for key, value in v.items():
+                        results.add('{}[{}]'.format(k, key), self._fields[k].python_to_string(value))
+                else:
+                    results.add(k, self._fields[k].python_to_string(v))
 
         return to_mixed(results)
 
@@ -116,9 +123,23 @@ class FormVal(object):
                     errors.add(k, e)
             elif self.ALLOW_UNDEFINED:
                 results.add(k, v)
+            else:
+                m = key_re.match(k)
+                if m:
+                    (main_key, sub_key) = m.groups()
+                    field = self._fields.get(main_key)
+
+                    if field and field.is_dict:
+                        try:
+                            v = field.string_to_python(k, v)
+                        except vv.ValidationException as e:
+                            errors.add(k, e)
+
+                        c = results.setdefault(main_key, {})
+                        c[sub_key] = v
 
         for k, v in self._fields.iteritems():
-            if k not in values:
+            if k not in results:
                 if not v.optional:
                     errors.add(k, vv.ValidationException('Undefined Error', field=k))
                 try:

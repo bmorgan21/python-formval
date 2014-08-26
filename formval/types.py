@@ -7,13 +7,14 @@ UNDEF = ()
 
 
 class BaseType(object):
-    def __init__(self, validator=None, optional=False, empty=True, default=UNDEF, default_when_empty=False, is_list=False, name=None):
+    def __init__(self, validator=None, optional=False, empty=True, default=UNDEF, default_when_empty=False, is_list=False, is_dict=False, name=None):
         self.validator = validator
         self.optional = optional
         self.empty = empty
         self._default = default
         self.default_when_empty = default_when_empty
         self.is_list = is_list
+        self.is_dict = is_dict
         self.name = name
         if self.default_when_empty and self._default == UNDEF:
             raise RuntimeError('No default specified when required')
@@ -33,6 +34,7 @@ class BaseType(object):
         if self._is_empty(value):
             if not self.empty:
                 raise vv.ValidationException('Please fill out this field.', field=name)
+
             return self.default
 
         try:
