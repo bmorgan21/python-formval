@@ -71,18 +71,22 @@ class FormVal(object):
     def __init__(self, success=None, failure=None):
         self.success = success
         self.failure = failure
+        self.fields = self._fields.copy()
+
+    def add_field(self, key, field):
+        self.fields[key] = field
 
     def process_python(self, values):
         """Turn raw python values back to strings"""
         values = self._to_strings(values)
         results = MultiDict()
         for k, v in values.iteritems():
-            if k in self._fields:
-                if self._fields[k].is_dict and isinstance(v, dict):
+            if k in self.fields:
+                if self.fields[k].is_dict and isinstance(v, dict):
                     for key, value in v.items():
-                        results.add('{}[{}]'.format(k, key), self._fields[k].python_to_string(value))
+                        results.add('{}[{}]'.format(k, key), self.fields[k].python_to_string(value))
                 else:
-                    results.add(k, self._fields[k].python_to_string(v))
+                    results.add(k, self.fields[k].python_to_string(v))
 
         return to_mixed(results)
 
@@ -115,9 +119,9 @@ class FormVal(object):
         items = to_mixed(values).items()
 
         for k, v in items:
-            if k in self._fields:
+            if k in self.fields:
                 try:
-                    results.add(k, self._fields[k].string_to_python(k, v))
+                    results.add(k, self.fields[k].string_to_python(k, v))
                 except vv.ValidationException as e:
                     results.add(k, v)
                     errors.add(k, e)
@@ -127,7 +131,7 @@ class FormVal(object):
                 m = key_re.match(k)
                 if m:
                     (main_key, sub_key) = m.groups()
-                    field = self._fields.get(main_key)
+                    field = self.fields.get(main_key)
 
                     if field and field.is_dict:
                         try:
@@ -138,7 +142,7 @@ class FormVal(object):
                         c = results.setdefault(main_key, {})
                         c[sub_key] = v
 
-        for k, v in self._fields.iteritems():
+        for k, v in self.fields.iteritems():
             if k not in results:
                 if not v.optional:
                     errors.add(k, vv.ValidationException('Undefined Error', field=k))
