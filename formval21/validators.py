@@ -1,7 +1,7 @@
 from PIL import Image
 from werkzeug import FileStorage
 
-from validation import *
+from validation21 import *
 
 
 class File(Validator):

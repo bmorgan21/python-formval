@@ -101,6 +101,7 @@ class Type(BaseType):
         kwargs.setdefault('validator', vv.Type(choices))
         BaseType.__init__(self, *args, **kwargs)
 
+
 class Email(Unicode):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('validator', vv.Email(max_length=256))

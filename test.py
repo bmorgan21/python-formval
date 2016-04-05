@@ -1,4 +1,4 @@
-from formval import FormVal, types as tt
+from formval21 import FormVal, types as tt
 
 f = FormVal()
 f.add_field('b', tt.Unicode(min_length=2, max_length=10))

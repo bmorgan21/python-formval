@@ -2,6 +2,7 @@ class Condition(object):
     def should_process(self, values):
         return True
 
+
 class KeyCondition(Condition):
     def __init__(self, key, val):
         self.key = key
