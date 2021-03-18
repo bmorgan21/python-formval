@@ -1,5 +1,5 @@
 Werkzeug>=0.9.4
 -e git+https://github.com/bmorgan21/python-validation.git@v0.1.1#egg=validation-0.1.1
-Pillow==2.4.0
+Pillow==8.1.1
 python-dateutil==2.2
 -e git+https://github.com/bmorgan21/python-enum.git@v0.1.1#egg=enum-0.1.1
